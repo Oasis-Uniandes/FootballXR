@@ -4,6 +4,39 @@ using TMPro;
 
 public class Shoot : MonoBehaviour
 {
+    [Header("Referencias a las Manos")]
+    [Tooltip("Referencia directa al objeto de la mano derecha")]
+    public GameObject rightHand;
+
+    [Tooltip("Referencia directa al objeto de la mano izquierda")]
+    public GameObject leftHand;
+
+    [Header("Indicadores de Tiro")]
+    [Tooltip("GameObject indicador para el tiro 1")]
+    public GameObject indicadorTiro1;
+
+    [Tooltip("GameObject indicador para el tiro 2")]
+    public GameObject indicadorTiro2;
+
+    [Tooltip("GameObject indicador para el tiro 3")]
+    public GameObject indicadorTiro3;
+
+    [Tooltip("GameObject indicador para el tiro 4")]
+    public GameObject indicadorTiro4;
+
+    [Tooltip("GameObject indicador para el tiro 5")]
+    public GameObject indicadorTiro5;
+
+    [Header("Materiales para los Indicadores")]
+    [Tooltip("Material inicial para los indicadores")]
+    public Material materialNormal;
+
+    [Tooltip("Material rojo para indicar gol")]
+    public Material materialRojo;
+
+    [Tooltip("Material verde para indicar atajada")]
+    public Material materialVerde;
+
     [Header("Basic Shooting Parameters")]
     [Tooltip("Time multiplier for the ball trajectory (higher = slower ball)")]
     [Range(0.5f, 5.0f)]
@@ -67,6 +100,8 @@ public class Shoot : MonoBehaviour
     private int golesAtajados = 0;
     // Flag para evitar contar goles múltiples veces en la misma jugada
     private bool goalScoredThisShot = false;
+    // Flag para controlar si hubo contacto con las manos en este tiro
+    private bool handContactThisShot = false;
 
     // Flag para evitar mostrar las estadísticas múltiples veces
     private bool statsShown = false;
@@ -81,8 +116,81 @@ public class Shoot : MonoBehaviour
     private Vector3 calculatedVelocity;
     private float debugFlightTime;
 
+    // Método para obtener el GameObject indicador correspondiente al número de tiro
+    private GameObject GetIndicadorForShot(int shotNumber)
+    {
+        switch (shotNumber)
+        {
+            case 1:
+                return indicadorTiro1;
+            case 2:
+                return indicadorTiro2;
+            case 3:
+                return indicadorTiro3;
+            case 4:
+                return indicadorTiro4;
+            case 5:
+                return indicadorTiro5;
+            default:
+                Debug.LogWarning("No hay indicador para el tiro número " + shotNumber);
+                return null;
+        }
+    }
+
+    // Método para actualizar el material del indicador según el resultado del tiro
+    private void ActualizarIndicadorTiro(int shotNumber, bool esGol)
+    {
+        GameObject indicador = GetIndicadorForShot(shotNumber);
+
+        if (indicador != null)
+        {
+            Renderer renderer = indicador.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                if (esGol)
+                {
+                    renderer.material = materialRojo;
+                    Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a ROJO (gol)");
+                }
+                else
+                {
+                    renderer.material = materialVerde;
+                    Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a VERDE (atajada)");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("El indicador para el tiro " + shotNumber + " no tiene componente Renderer");
+            }
+        }
+    }
+
     void Start()
     {
+        // Verificar si se han asignado las manos
+        if (rightHand == null || leftHand == null)
+        {
+            Debug.LogWarning("¡Las referencias a las manos no están asignadas! Por favor, asígnalas en el inspector para una mejor detección de colisiones.");
+        }
+
+        // Inicializar todos los indicadores con el material normal
+        for (int i = 1; i <= 5; i++)
+        {
+            GameObject indicador = GetIndicadorForShot(i);
+            if (indicador != null)
+            {
+                Renderer renderer = indicador.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = materialNormal;
+                }
+                else
+                {
+                    Debug.LogWarning("El indicador para el tiro " + i + " no tiene componente Renderer");
+                }
+            }
+        }
+
         // Find all audio listeners in the scene
         AudioListener[] listeners = FindObjectsOfType<AudioListener>();
 
@@ -275,15 +383,20 @@ public class Shoot : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // Detectar colisión con las manos
-        if (!goalScoredThisShot && collision.gameObject.CompareTag("hands"))
+        // Detectar colisión con las manos usando la referencia directa
+        if (!goalScoredThisShot && !handContactThisShot &&
+            (collision.gameObject == rightHand || collision.gameObject == leftHand ||
+             (collision.transform.IsChildOf(rightHand.transform) || collision.transform.IsChildOf(leftHand.transform)) ||
+             collision.gameObject.CompareTag("hands")))
         {
-            Debug.Log("¡Balón tocó las manos del arquero!");
+            handContactThisShot = true;
+            Debug.Log("Tiro número " + shotsFired + ": ¡Balón tocó las manos del arquero! GameObject: " + collision.gameObject.name);
 
             // Reproducir sonido de atajada
             if (FootballAudioManager.Instance != null)
             {
                 FootballAudioManager.Instance.PlaySaveSound();
+                Debug.Log("Reproduciendo sonido de atajada por colisión con las manos");
             }
         }
     }
@@ -307,7 +420,7 @@ public class Shoot : MonoBehaviour
             if (PlayerDataManager.Instance != null)
             {
                 PlayerDataManager.Instance.IncrementGolesRecibidos();
-                Debug.Log("Gol registrado en la base de datos para el jugador: " +
+                Debug.Log("Tiro número " + shotsFired + ": Gol registrado en la base de datos para el jugador: " +
                          PlayerDataManager.Instance.GetCurrentPlayerName());
             }
             else
@@ -315,14 +428,17 @@ public class Shoot : MonoBehaviour
                 Debug.LogWarning("PlayerDataManager no encontrado. No se pudo registrar el gol en la base de datos.");
             }
 
+            // Actualizar el indicador correspondiente a este tiro
+            ActualizarIndicadorTiro(shotsFired, true); // true = es gol
+
             // Mostrar mensaje en debug log
-            Debug.Log("¡GOL DEL USUARIO! El usuario lleva " + golesAnotados + " goles");
+            Debug.Log("Tiro número " + shotsFired + ": ¡GOL DEL USUARIO! El usuario lleva " + golesAnotados + " goles");
         }
 
         // Cuando se detecta un golpe en el poste:
         if (!goalScoredThisShot && other.CompareTag("poste"))
         {
-            Debug.Log("¡Balón golpeó el poste!");
+            Debug.Log("Tiro número " + shotsFired + ": ¡Balón golpeó el poste!");
 
             // Reproducir sonido de poste
             if (FootballAudioManager.Instance != null)
@@ -339,16 +455,15 @@ public class Shoot : MonoBehaviour
         {
             golesAtajados++;
 
-            if (FootballAudioManager.Instance != null)
-            {
-                FootballAudioManager.Instance.PlaySaveSound();
-            }
+            // Si hubo contacto con las manos, ya se reprodujo el sonido
+            // Si no hubo contacto, reproducir el sonido ahora
+            
 
             // Incrementar goles atajados en la base de datos
             if (PlayerDataManager.Instance != null)
             {
                 PlayerDataManager.Instance.IncrementGolesAtajados();
-                Debug.Log("Gol atajado registrado en la base de datos para el jugador: " +
+                Debug.Log("Tiro número " + shotsFired + ": Gol atajado registrado en la base de datos para el jugador: " +
                          PlayerDataManager.Instance.GetCurrentPlayerName());
             }
             else
@@ -356,7 +471,10 @@ public class Shoot : MonoBehaviour
                 Debug.LogWarning("PlayerDataManager no encontrado. No se pudo registrar el gol atajado en la base de datos.");
             }
 
-            Debug.Log("¡GOL ATAJADO! El usuario lleva " + golesAtajados + " goles atajados");
+            // Actualizar el indicador correspondiente a este tiro
+            ActualizarIndicadorTiro(shotsFired, false); // false = no es gol, es atajada
+
+            Debug.Log("Tiro número " + shotsFired + ": ¡GOL ATAJADO! El usuario lleva " + golesAtajados + " goles atajados");
         }
     }
 
@@ -471,6 +589,7 @@ public class Shoot : MonoBehaviour
         // Reset collision state
         shotInProgress = false;
         goalScoredThisShot = false;
+        handContactThisShot = false;
 
         Debug.Log("Ball respawned at " + respawnPosition);
 
@@ -536,10 +655,10 @@ public class Shoot : MonoBehaviour
             FootballAudioManager.Instance.PlayKickSound();
         }
 
-        Debug.Log("Applied initial velocity: " + scaledVelocity + " with magnitude: " + scaledVelocity.magnitude);
-        Debug.Log("Time scale: " + timeScale + " (higher = slower ball)");
-        Debug.Log("Estimated time to target: " + (CalculateBaseTime() * timeScale) + " seconds");
-        Debug.Log("Ball shot towards target: " + currentTargetPoint);
+        Debug.Log("Tiro número " + shotsFired + ": Applied initial velocity: " + scaledVelocity + " with magnitude: " + scaledVelocity.magnitude);
+        Debug.Log("Tiro número " + shotsFired + ": Time scale: " + timeScale + " (higher = slower ball)");
+        Debug.Log("Tiro número " + shotsFired + ": Estimated time to target: " + (CalculateBaseTime() * timeScale) + " seconds");
+        Debug.Log("Tiro número " + shotsFired + ": Ball shot towards target: " + currentTargetPoint);
 
         // Iniciar el temporizador para que la pelota desaparezca después de un tiempo fijo
         StartCoroutine(DisappearAfterFixedDelay());
@@ -614,6 +733,7 @@ public class Shoot : MonoBehaviour
         shotsFired = 0;
         shotInProgress = false;
         goalScoredThisShot = false;
+        handContactThisShot = false;
         cycleActive = true;
         golesAnotados = 0;
         golesAtajados = 0;
@@ -630,6 +750,21 @@ public class Shoot : MonoBehaviour
         if (countdownText != null)
         {
             countdownText.text = " ";
+        }
+
+        // Reiniciar todos los indicadores al material normal
+        for (int i = 1; i <= 5; i++)
+        {
+            GameObject indicador = GetIndicadorForShot(i);
+            if (indicador != null)
+            {
+                Renderer renderer = indicador.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = materialNormal;
+                    Debug.Log("Reiniciando indicador " + i + " a material normal");
+                }
+            }
         }
 
         // Respawn the ball
