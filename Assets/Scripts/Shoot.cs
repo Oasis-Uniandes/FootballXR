@@ -87,6 +87,10 @@ public class Shoot : MonoBehaviour
     [Tooltip("Tiempo de espera en segundos para mostrar el diálogo antes de cargar estadísticas")]
     public float tiempoMostrarDialogo = 5f;
 
+    [Header("Debug Options")]
+    [Tooltip("Enable verbose logging for collision detection")]
+    public bool verboseLogging = true;
+
     // Reference to components
     private Rigidbody rb;
     private MeshRenderer meshRenderer;
@@ -102,6 +106,8 @@ public class Shoot : MonoBehaviour
     private bool goalScoredThisShot = false;
     // Flag para controlar si hubo contacto con las manos en este tiro
     private bool handContactThisShot = false;
+    // Flag para controlar si ya se registró una atajada para este tiro
+    private bool savedRegisteredThisShot = false;
 
     // Flag para evitar mostrar las estadísticas múltiples veces
     private bool statsShown = false;
@@ -132,7 +138,7 @@ public class Shoot : MonoBehaviour
             case 5:
                 return indicadorTiro5;
             default:
-                Debug.LogWarning("No hay indicador para el tiro número " + shotNumber);
+                if (verboseLogging) Debug.LogWarning("No hay indicador para el tiro número " + shotNumber);
                 return null;
         }
     }
@@ -150,12 +156,12 @@ public class Shoot : MonoBehaviour
                 if (esGol)
                 {
                     renderer.material = materialRojo;
-                    Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a ROJO (gol)");
+                    if (verboseLogging) Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a ROJO (gol)");
                 }
                 else
                 {
                     renderer.material = materialVerde;
-                    Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a VERDE (atajada)");
+                    if (verboseLogging) Debug.Log("Tiro " + shotNumber + ": Indicador cambiado a VERDE (atajada)");
                 }
             }
             else
@@ -355,7 +361,7 @@ public class Shoot : MonoBehaviour
             ballCollider.enabled = false;
         }
 
-        Debug.Log("Pelota ocultada (sin desactivar GameObject)");
+        if (verboseLogging) Debug.Log("Pelota ocultada (sin desactivar GameObject)");
     }
 
     // Método para mostrar visualmente la pelota
@@ -378,16 +384,37 @@ public class Shoot : MonoBehaviour
             ballCollider.enabled = true;
         }
 
-        Debug.Log("Pelota mostrada");
+        if (verboseLogging) Debug.Log("Pelota mostrada");
+    }
+
+    // Método para verificar si un objeto es una mano o parte de una mano
+    private bool IsHandObject(GameObject obj)
+    {
+        // Verificar si el objeto es directamente una mano
+        if (obj == rightHand || obj == leftHand)
+            return true;
+
+        // Verificar si el objeto es hijo de una mano
+        if (rightHand != null && obj.transform.IsChildOf(rightHand.transform))
+            return true;
+
+        if (leftHand != null && obj.transform.IsChildOf(leftHand.transform))
+            return true;
+
+        // Verificar por tag
+        if (obj.CompareTag("hands"))
+            return true;
+
+        // No es una mano
+        return false;
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        if (verboseLogging) Debug.Log("Colisión detectada con: " + collision.gameObject.name);
+
         // Detectar colisión con las manos usando la referencia directa
-        if (!goalScoredThisShot && !handContactThisShot &&
-            (collision.gameObject == rightHand || collision.gameObject == leftHand ||
-             (collision.transform.IsChildOf(rightHand.transform) || collision.transform.IsChildOf(leftHand.transform)) ||
-             collision.gameObject.CompareTag("hands")))
+        if (!goalScoredThisShot && !handContactThisShot && IsHandObject(collision.gameObject))
         {
             handContactThisShot = true;
             Debug.Log("Tiro número " + shotsFired + ": ¡Balón tocó las manos del arquero! GameObject: " + collision.gameObject.name);
@@ -401,9 +428,28 @@ public class Shoot : MonoBehaviour
         }
     }
 
+    void OnCollisionStay(Collision collision)
+    {
+        // También detectar colisiones continuas con las manos
+        if (!goalScoredThisShot && !handContactThisShot && IsHandObject(collision.gameObject))
+        {
+            handContactThisShot = true;
+            Debug.Log("Tiro número " + shotsFired + ": ¡Balón en contacto continuo con las manos! GameObject: " + collision.gameObject.name);
+
+            // Reproducir sonido de atajada
+            if (FootballAudioManager.Instance != null)
+            {
+                FootballAudioManager.Instance.PlaySaveSound();
+                Debug.Log("Reproduciendo sonido de atajada por colisión continua con las manos");
+            }
+        }
+    }
+
     // Método para detectar cuando la pelota atraviesa el trigger del gol
     void OnTriggerEnter(Collider other)
     {
+        if (verboseLogging) Debug.Log("Trigger entrado: " + other.gameObject.name + " con tag: " + other.tag);
+
         // Verificar si atravesó el collider con tag "Goal" y que no haya anotado gol en este tiro aún
         if (!goalScoredThisShot && other.CompareTag(goalTag))
         {
@@ -451,13 +497,18 @@ public class Shoot : MonoBehaviour
     // Método para registrar gol atajado
     private void RegisterGoalSaved()
     {
-        if (!goalScoredThisShot)
+        // Solo registrar una vez por tiro y solo si no hubo gol
+        if (!goalScoredThisShot && !savedRegisteredThisShot)
         {
+            savedRegisteredThisShot = true;
             golesAtajados++;
 
-            // Si hubo contacto con las manos, ya se reprodujo el sonido
-            // Si no hubo contacto, reproducir el sonido ahora
-            
+            // Solo reproducir sonido si no hubo contacto previo con las manos
+            //if (!handContactThisShot && FootballAudioManager.Instance != null)
+            //{
+            //    FootballAudioManager.Instance.PlaySaveSound();
+            //    Debug.Log("Reproduciendo sonido de atajada al registrar gol atajado");
+            //}
 
             // Incrementar goles atajados en la base de datos
             if (PlayerDataManager.Instance != null)
@@ -560,6 +611,19 @@ public class Shoot : MonoBehaviour
         // Esperar el tiempo configurado
         yield return new WaitForSeconds(delayBeforeStats);
 
+        // Imprimir información de las estadísticas finales antes de cargar la escena
+        Debug.Log("ESTADÍSTICAS FINALES ANTES DE CARGAR ESCENA:");
+        Debug.Log("- Total de tiros: " + shotsFired);
+        Debug.Log("- Goles anotados: " + golesAnotados);
+        Debug.Log("- Goles atajados: " + golesAtajados);
+
+        // Verificar que la suma de goles + atajadas = total de tiros
+        if (golesAnotados + golesAtajados != shotsFired)
+        {
+            Debug.LogWarning("¡ALERTA! La suma de goles (" + golesAnotados + ") y atajadas (" +
+                             golesAtajados + ") no coincide con el total de tiros (" + shotsFired + ")");
+        }
+
         // Cargar la escena de estadísticas
         if (GameController.Instance != null)
         {
@@ -590,6 +654,7 @@ public class Shoot : MonoBehaviour
         shotInProgress = false;
         goalScoredThisShot = false;
         handContactThisShot = false;
+        savedRegisteredThisShot = false;
 
         Debug.Log("Ball respawned at " + respawnPosition);
 
@@ -734,6 +799,7 @@ public class Shoot : MonoBehaviour
         shotInProgress = false;
         goalScoredThisShot = false;
         handContactThisShot = false;
+        savedRegisteredThisShot = false;
         cycleActive = true;
         golesAnotados = 0;
         golesAtajados = 0;
@@ -762,7 +828,7 @@ public class Shoot : MonoBehaviour
                 if (renderer != null)
                 {
                     renderer.material = materialNormal;
-                    Debug.Log("Reiniciando indicador " + i + " a material normal");
+                    if (verboseLogging) Debug.Log("Reiniciando indicador " + i + " a material normal");
                 }
             }
         }
