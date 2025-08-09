@@ -18381,7 +18381,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 450048117}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18430,7 +18430,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2797272dd564b794d80022553021d73d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c852f610fb8b9a47a1e562c7b064317, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -31517,7 +31517,7 @@ GameObject:
   - component: {fileID: 385088698}
   - component: {fileID: 385088697}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31564,7 +31564,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f6e2f3c22b7c129459ce77e559489760, type: 2}
+  - {fileID: 2100000, guid: 6fd336266b9ec624fb7f9fa4b6543b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -41072,7 +41072,7 @@ GameObject:
   - component: {fileID: 516065110}
   - component: {fileID: 516065109}
   m_Layer: 0
-  m_Name: Cube (4)
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41119,7 +41119,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b0aa6e1f6cd6a2b468e05f712eda9e08, type: 2}
+  - {fileID: 2100000, guid: 6fd336266b9ec624fb7f9fa4b6543b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -49632,7 +49632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2609c54f376cffc4da1ab9401cc1a36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonType: 5
+  _skeletonType: 1
   _updateRootPose: 0
   _updateRootScale: 1
   _enablePhysicsCapsules: 0
@@ -49666,7 +49666,7 @@ GameObject:
   - component: {fileID: 698172745}
   - component: {fileID: 698172744}
   m_Layer: 0
-  m_Name: Cube (5)
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49713,7 +49713,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b0aa6e1f6cd6a2b468e05f712eda9e08, type: 2}
+  - {fileID: 2100000, guid: 6fd336266b9ec624fb7f9fa4b6543b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -55175,22 +55175,22 @@ PrefabInstance:
     - target: {fileID: 3928455945535332032, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3928455945535332032, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3928455945535332032, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 154
       objectReference: {fileID: 0}
     - target: {fileID: 3928455945535332032, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 4118325446768938422, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
@@ -55330,22 +55330,22 @@ PrefabInstance:
     - target: {fileID: 6112601038182853768, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6112601038182853768, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6112601038182853768, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6112601038182853768, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 6126434949209653596, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
@@ -55415,7 +55415,7 @@ PrefabInstance:
     - target: {fileID: 6653064668363691903, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_text
-      value: Simulador de Penaltis DISC
+      value: Simulador de Penaltis Oasis Developments
       objectReference: {fileID: 0}
     - target: {fileID: 6653064668363691903, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
@@ -61036,7 +61036,7 @@ GameObject:
   - component: {fileID: 992055889}
   - component: {fileID: 992055888}
   m_Layer: 0
-  m_Name: Cube (3)
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61083,7 +61083,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ec84e5a31d1ac98419465d4b42988e43, type: 2}
+  - {fileID: 2100000, guid: 6fd336266b9ec624fb7f9fa4b6543b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -88602,7 +88602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2609c54f376cffc4da1ab9401cc1a36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skeletonType: 4
+  _skeletonType: 0
   _updateRootPose: 0
   _updateRootScale: 1
   _enablePhysicsCapsules: 0
@@ -93124,7 +93124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 184, y: -5.9}
+  m_AnchoredPosition: {x: 184, y: -5.899994}
   m_SizeDelta: {x: 368, y: 11.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1382898736
@@ -102935,7 +102935,7 @@ GameObject:
   - component: {fileID: 1572232888}
   - component: {fileID: 1572232887}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -102982,7 +102982,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ec84e5a31d1ac98419465d4b42988e43, type: 2}
+  - {fileID: 2100000, guid: 6fd336266b9ec624fb7f9fa4b6543b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123557,7 +123557,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_VideoClip
       value: 
-      objectReference: {fileID: 32900000, guid: 7a0ef6b992c711640852844c89fdb564,
+      objectReference: {fileID: 32900000, guid: 77349df1c0588c649833658535a7bf26,
         type: 3}
     - target: {fileID: 4021789224605389189, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
@@ -124029,6 +124029,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 19573721eecd087499e0d1a2949546d6, type: 2}
+    - target: {fileID: 6635193994499136866, guid: d1fbb9de4e73aff46a9f589420c2ad34,
+        type: 3}
+      propertyPath: m_Name
+      value: TUMARCAAQUIBANNER
+      objectReference: {fileID: 0}
     - target: {fileID: 6653064668363691903, guid: d1fbb9de4e73aff46a9f589420c2ad34,
         type: 3}
       propertyPath: m_text
@@ -134711,7 +134716,7 @@ GameObject:
   - component: {fileID: 2042540425}
   - component: {fileID: 2042540424}
   m_Layer: 0
-  m_Name: DISC (10)
+  m_Name: TUMARCAAQUIBANNER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -134758,7 +134763,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 45b0858e4fbc3564f805992e4349be13, type: 2}
+  - {fileID: 2100000, guid: dedd38e11073a804faacb1d4de80ef6e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -138663,7 +138668,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.000014901161}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 808599407}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -146026,7 +146031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 184, y: -5.9}
+  m_AnchoredPosition: {x: 184, y: -5.899994}
   m_SizeDelta: {x: 368, y: 11.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5403213187506229631
@@ -147570,11 +147575,11 @@ SceneRoots:
   - {fileID: 872417929}
   - {fileID: 478228575}
   - {fileID: 730164370}
-  - {fileID: 2042540427}
   - {fileID: 2036290369}
+  - {fileID: 1629678837}
+  - {fileID: 2042540427}
   - {fileID: 385088700}
   - {fileID: 1572232890}
   - {fileID: 516065112}
   - {fileID: 992055891}
-  - {fileID: 1629678837}
   - {fileID: 698172747}
