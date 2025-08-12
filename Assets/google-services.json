@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "114304152657",
+    "project_id": "servidorpruebasunity",
+    "storage_bucket": "servidorpruebasunity.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:114304152657:android:e8e332d205c873a9b3f470",
+        "android_client_info": {
+          "package_name": "com.oasis.devs.football.trial"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxx_e-NtS7xpj7WvXaXZTxsYU59frtUGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
